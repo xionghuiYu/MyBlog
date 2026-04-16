@@ -16,10 +16,14 @@
 |------|------|------|
 | Vite | 构建工具 | 开发体验好，启动快，热更新快 |
 | Vue 3 (Composition API) | 前端框架 | 组件化开发，易于扩展小工具 |
-| Vue Router | 路由管理 | 单页应用路由，支持动态导入 |
+| Vue Router | 路由管理 | 单页应用路由 |
 | Tailwind CSS | 样式框架 | 快速开发，内置响应式，支持深色模式 |
 | Lucide Vue | 图标库 | SVG 图标，风格统一，支持主题 |
 | Markdown | 博客格式 | 易于编写，广泛支持 |
+| marked | Markdown 解析器 | 轻量、快速、广泛支持 |
+| highlight.js | 代码高亮 | 多语言支持、主题丰富 |
+| Vitest | 单元/组件测试 | Vue 3 生态原生支持，速度快 |
+| Playwright | E2E 测试 | 跨浏览器、API 稳定 |
 | Vercel / GitHub Pages | 部署平台 | 自动部署，免费托管，全球 CDN |
 
 ---
@@ -30,7 +34,9 @@
 Blog/
 ├── public/                    # 静态资源
 │   ├── favicon.ico
-│   └── images/
+│   ├── images/               # 图片资源
+│   └── posts/                # Markdown 博客文件（静态资源）
+│       └── *.md
 ├── src/
 │   ├── components/            # Vue 组件
 │   │   ├── common/           # 通用组件
@@ -49,38 +55,45 @@ Blog/
 │   │   ├── tools/            # 工具相关组件
 │   │   │   ├── ToolCard.vue
 │   │   │   ├── ToolList.vue
-│   │   │   ├── ToolContainer.vue  # 工具容器
-│   │   │   └── [tool-name]/      # 各个工具组件
+│   │   │   ├── TodoApp.vue   # 待办清单工具
+│   │   │   ├── PomodoroTimer.vue  # 番茄钟工具
+│   │   │   └── QuickNotes.vue     # 快速笔记工具
 │   │   └── ui/               # UI 基础组件
 │   │       ├── Button.vue
 │   │       ├── Input.vue
 │   │       ├── Card.vue
 │   │       └── Loading.vue
-│   ├── data/                 # 数据文件
+│   ├── data/                 # 数据文件（配置，热更新）
 │   │   ├── bookmarks.json    # 收藏网站数据
-│   │   └── tools.json        # 工具元数据
-│   ├── posts/                # Markdown 博客文件
-│   │   └── *.md
+│   │   └── config.js         # 工具配置（硬编码）
 │   ├── pages/                # 页面组件
 │   │   ├── Home.vue
 │   │   ├── Blog.vue
 │   │   ├── BlogDetail.vue
 │   │   ├── Bookmarks.vue
-│   │   └── Tools.vue
+│   │   ├── Tools.vue
+│   │   ├── TodoTool.vue      # 待办清单页面
+│   │   ├── PomodoroTool.vue  # 番茄钟页面
+│   │   └── NotesTool.vue     # 快速笔记页面
 │   ├── router/               # 路由配置
 │   │   └── index.js
 │   ├── stores/               # 状态管理
-│   │   ├── theme.js
-│   │   └── bookmarks.js
+│   │   └── theme.js
 │   ├── utils/                # 工具函数
 │   │   ├── markdown.js
 │   │   ├── date.js
-│   │   └── validation.js
+│   │   └── fetch.js
 │   ├── App.vue
 │   └── main.js
+├── tests/
+│   ├── unit/                 # 单元测试
+│   ├── components/           # 组件测试
+│   └── e2e/                  # E2E 测试
 ├── package.json
 ├── vite.config.js
 ├── tailwind.config.js
+├── vitest.config.js          # Vitest 配置
+├── playwright.config.ts      # Playwright 配置
 └── README.md
 ```
 
@@ -94,8 +107,10 @@ Blog/
 | `/blog` | 博客列表 | 文章列表展示 | 按时间倒序，支持标签筛选 |
 | `/blog/:slug` | 博客详情 | 单篇文章渲染 | Markdown 渲染，返回列表 |
 | `/bookmarks` | 收藏网站 | 链接卡片展示 | 按分类筛选，搜索功能 |
-| `/tools` | 效率工具 | 工具列表 | 网格布局展示所有工具 |
-| `/tools/:toolName` | 单个工具 | 独立工具页面 | 动态加载工具组件（仅限 tools.json 中注册的工具） |
+| `/tools` | 效率工具 | 工具列表 | 网格布局展示所有可用工具 |
+| `/tools/todo` | 待办清单 | 任务管理工具 | 硬编码路由，TodoApp 组件 |
+| `/tools/pomodoro` | 番茄钟 | 专注计时器 | 硬编码路由，PomodoroTimer 组件 |
+| `/tools/notes` | 快速笔记 | 轻量笔记工具 | 硬编码路由，QuickNotes 组件 |
 
 ---
 
@@ -103,7 +118,7 @@ Blog/
 
 ### 4.1 博客文章 (Markdown)
 
-文件位置：`src/posts/*.md`
+文件位置：`public/posts/*.md`（静态资源，可直接通过 fetch 读取）
 
 ```markdown
 ---
@@ -117,6 +132,8 @@ summary: "文章摘要，用于列表展示"
 ```
 
 ### 4.2 收藏网站 (bookmarks.json)
+
+文件位置：`src/data/bookmarks.json`
 
 ```json
 {
@@ -133,29 +150,34 @@ summary: "文章摘要，用于列表展示"
 }
 ```
 
-### 4.3 效率工具 (tools.json)
+### 4.3 工具配置 (config.js)
 
-```json
-{
-  "tools": [
-    {
-      "id": "t1",
-      "name": "待办清单",
-      "component": "TodoApp",
-      "description": "简单的任务管理工具",
-      "icon": "check-square",
-      "route": "todo"
-    },
-    {
-      "id": "t2",
-      "name": "番茄钟",
-      "component": "PomodoroTimer",
-      "description": "专注计时器",
-      "icon": "timer",
-      "route": "pomodoro"
-    }
-  ]
-}
+文件位置：`src/data/config.js`
+
+```javascript
+export const tools = [
+  {
+    id: 'todo',
+    name: '待办清单',
+    description: '简单的任务管理工具',
+    icon: 'check-square',
+    route: '/tools/todo'
+  },
+  {
+    id: 'pomodoro',
+    name: '番茄钟',
+    description: '专注计时器',
+    icon: 'timer',
+    route: '/tools/pomodoro'
+  },
+  {
+    id: 'notes',
+    name: '快速笔记',
+    description: '轻量笔记工具',
+    icon: 'file-text',
+    route: '/tools/notes'
+  }
+]
 ```
 
 ---
@@ -250,13 +272,9 @@ summary: "文章摘要，用于列表展示"
 
 ### 6.4 工具系统
 
-- **工具扩展机制：**
-  1. 在 `tools.json` 注册工具信息
-  2. 在 `src/components/tools/` 创建 Vue 组件
-  3. 动态导入自动加载
-
-- **工具容器：** 提供统一的工具页面框架
-- **工具列表：** 网格布局展示所有可用工具
+- **硬编码路由：** 每个工具有独立路由和页面组件
+- **工具扩展：** 添加新工具需要：1) 创建工具组件，2) 在 router 中添加路由，3) 在 config.js 中注册
+- **工具列表：** 从 config.js 读取工具配置，网格布局展示
 
 ---
 
@@ -264,24 +282,24 @@ summary: "文章摘要，用于列表展示"
 
 ### 7.1 工具扩展流程
 
-添加新工具只需三步：
+添加新工具需要四步：
 
-1. **注册工具：** 在 `src/data/tools.json` 添加条目（必需，安全白名单）
-2. **创建组件：** 在 `src/components/tools/[tool-name]/` 创建 Vue 组件
-3. **自动发现：** 工具自动出现在工具列表页
-
-**安全说明：** 工具路由 `/tools/:toolName` 只接受 `tools.json` 中已注册的工具名称。动态导入组件前会先验证 toolName 是否在白名单中，防止路径遍历攻击。
+1. **创建组件：** 在 `src/components/tools/` 创建 Vue 组件
+2. **创建页面：** 在 `src/pages/` 创建工具页面组件
+3. **添加路由：** 在 `src/router/index.js` 添加路由
+4. **注册配置：** 在 `src/data/config.js` 添加工具配置
 
 ### 7.2 组件化架构
 
-- 通用组件可复用
+- 通用组件可复用（Button、Input、Card、Loading）
 - 工具组件独立封装
 - 通过 props 和 emit 通信
 - 支持组合式 API 逻辑复用
 
 ### 7.3 数据驱动
 
-- 内容与展示分离
+- 博客内容与展示分离（Markdown 文件）
+- 收藏和工具配置集中管理（config.js）
 - 数据文件版本控制
 - 易于迁移和备份
 
@@ -301,16 +319,9 @@ summary: "文章摘要，用于列表展示"
 - 提供返回首页的链接
 - 建议相关内容
 
-### 8.3 工具组件加载失败
-
-- 降级显示工具信息卡片
-- 不影响其他功能
-- 错误边界捕获
-
-### 8.4 边界情况
+### 8.3 边界情况
 
 - **空状态：** 引导性提示
-- **大数据量：** 虚拟滚动
 - **网络慢：** Skeleton 加载
 - **图片失败：** 占位图
 
@@ -321,19 +332,18 @@ summary: "文章摘要，用于列表展示"
 ### 9.1 代码分割
 
 - 路由级别懒加载
-- 工具组件动态导入
-- 非关键库按需加载
+- 非关键库按需加载（highlight.js 按语言）
 
 ### 9.2 资源优化
 
-- 图片：WebP 格式 + srcset
-- 字体：font-display: swap
-- CSS：关键样式内联
+- 图片：WebP 格式 + srcset（使用 vite-plugin-imagemin）
+- 字体：font-display: swap，预加载关键字体
+- CSS：关键样式内联，Tailwind CSS 按需生成
 
 ### 9.3 缓存策略
 
 - 静态资源：强缓存（1年）
-- 数据文件：协商缓存
+- Markdown 文件：协商缓存（内容版本控制）
 - HTML：短缓存（1小时）
 
 ### 9.4 Core Web Vitals 目标
@@ -346,15 +356,19 @@ summary: "文章摘要，用于列表展示"
 
 ## 10. 测试策略
 
+**测试框架：**
+- 单元/组件测试：Vitest（Vue 3 生态原生支持）
+- E2E 测试：Playwright（跨浏览器、API 稳定）
+
 ### 10.1 单元测试
 
 **测试文件位置：** `tests/unit/`
 
 **测试覆盖：**
-- `utils/markdown.test.js` — Frontmatter 解析、Markdown 渲染、代码高亮
+- `utils/markdown.test.js` — Frontmatter 解析、Markdown 渲染（marked）、代码高亮（highlight.js）
 - `utils/date.test.js` — 日期格式转换（ISO → 显示格式）
-- `utils/validation.test.js` — URL 验证、输入验证
-- `router/whitelist.test.js` — **CRITICAL** 工具白名单验证逻辑，防止路径遍历攻击
+- `utils/fetch.test.js` — fetch Posts API、错误处理
+- `data/config.test.js` — 工具配置数据验证
 
 ### 10.2 组件测试
 
@@ -367,6 +381,9 @@ summary: "文章摘要，用于列表展示"
 - `Bookmarks.test.js` — 收藏列表渲染、分类筛选、搜索功能
 - `Tools.test.js` — 工具列表渲染、工具卡片点击
 - `ThemeToggle.test.js` — 深色模式切换、主题持久化（LocalStorage）
+- `TodoTool.test.js` — 待办清单工具核心逻辑
+- `PomodoroTool.test.js` — 番茄钟计时器逻辑
+- `NotesTool.test.js` — 快速笔记保存/加载逻辑
 
 ### 10.3 E2E 测试
 
@@ -375,8 +392,7 @@ summary: "文章摘要，用于列表展示"
 **测试覆盖：**
 - `navigation.spec.js` — 完整导航流程（首页 → 各子页面 → 返回）
 - `blog-flow.spec.js` — 阅读博客完整流程（列表 → 详情 → 返回）
-- `tools-flow.spec.js` — 工具动态加载流程（列表 → 工具页 → 功能验证）
-- `security.spec.js` — **CRITICAL** 工具路由安全测试，验证路径遍历攻击被阻止
+- `tools-flow.spec.js` — 工具使用流程（列表 → 工具页 → 功能验证）
 - `responsive.spec.js` — 移动端/平板/桌面响应式布局验证
 
 ---
@@ -402,26 +418,23 @@ summary: "文章摘要，用于列表展示"
 
 ### 12.1 Git 分支策略
 
-- `main` - 生产环境
-- `develop` - 开发分支
-- `feature/*` - 功能分支
+- `main` - 主分支（单分支策略，个人博客无需复杂分支）
 
 ### 12.2 内容更新流程
 
-1. 本地编辑 Markdown/JSON 文件
+1. 本地编辑 Markdown 文件（`public/posts/`）
 2. 提交并推送到 GitHub
 3. 自动触发部署
 4. 几分钟后线上更新
 
 ### 12.3 工具开发流程
 
-1. 从 `develop` 分支创建 `feature/tool-name` 功能分支
-2. 开发工具组件
-3. 更新 tools.json
+1. 在 `main` 分支上创建工具组件和页面
+2. 在 `src/router/index.js` 添加路由
+3. 在 `src/data/config.js` 注册工具
 4. 本地测试
-5. 提交 PR 到 `develop` 分支
-6. 代码审查
-7. 合并到 `develop`，定期从 `develop` 合并到 `main`
+5. 提交并推送
+6. 自动部署到线上
 
 ---
 
@@ -452,10 +465,10 @@ summary: "文章摘要，用于列表展示"
 ## 14. 安全考虑
 
 - 不存储敏感信息
-- 输入验证和转义
-- CSP 头配置
-- HTTPS 强制
+- 输入验证和转义（XSS 防护）
+- HTTPS 强制（Vercel/GitHub Pages 自动提供）
 - 依赖定期更新
+- **注意：** 如果配置 CSP，需要允许 Google Fonts：`font-src https://fonts.gstatic.com`
 
 ---
 
@@ -475,9 +488,9 @@ summary: "文章摘要，用于列表展示"
 ### 16.1 功能验收
 
 - [ ] 首页三个入口卡片正常显示
-- [ ] 博客列表和详情页正常工作
-- [ ] 收藏列表按分类筛选
-- [ ] 工具列表和工具页面正常
+- [ ] 博客列表和详情页正常工作（Markdown 渲染、代码高亮）
+- [ ] 收藏列表按分类筛选、搜索功能正常
+- [ ] 工具列表和三个工具页面（待办清单、番茄钟、快速笔记）正常
 - [ ] 深色模式切换正常
 - [ ] 响应式布局在所有断点正常
 
@@ -505,6 +518,10 @@ summary: "文章摘要，用于列表展示"
 - [Vue 3 官方文档](https://vuejs.org/)
 - [Tailwind CSS 文档](https://tailwindcss.com/)
 - [Vue Router 文档](https://router.vuejs.org/)
+- [marked 文档](https://marked.js.org/)
+- [highlight.js 文档](https://highlightjs.org/)
+- [Vitest 文档](https://vitest.dev/)
+- [Playwright 文档](https://playwright.dev/)
 
 ### B. 设计资源
 
@@ -514,5 +531,5 @@ summary: "文章摘要，用于列表展示"
 
 ---
 
-**文档版本：** 1.0
-**最后更新：** 2026-04-16
+**文档版本：** 1.1
+**最后更新：** 2026-04-16（根据外部审查更新：简化工具系统、指定技术栈、单分支策略）
