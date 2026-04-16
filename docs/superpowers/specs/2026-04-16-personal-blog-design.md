@@ -95,7 +95,7 @@ Blog/
 | `/blog/:slug` | 博客详情 | 单篇文章渲染 | Markdown 渲染，返回列表 |
 | `/bookmarks` | 收藏网站 | 链接卡片展示 | 按分类筛选，搜索功能 |
 | `/tools` | 效率工具 | 工具列表 | 网格布局展示所有工具 |
-| `/tools/:toolName` | 单个工具 | 独立工具页面 | 动态加载工具组件 |
+| `/tools/:toolName` | 单个工具 | 独立工具页面 | 动态加载工具组件（仅限 tools.json 中注册的工具） |
 
 ---
 
@@ -192,8 +192,17 @@ summary: "文章摘要，用于列表展示"
 - **行高：** 正文 1.6
 - **字号比例：** 12 / 14 / 16 / 18 / 24 / 32 / 48px
 
+**字体加载优化：**
+- 使用 Google Fonts 子集化 API（subset=latin,latin-ext）
+- 预加载关键字体（wght@400;600 用于标题和正文）
+- `font-display: swap` 防止阻塞渲染
+
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+/* 在 index.html 中预加载关键字体 */
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Space+Grotesk:wght@400;500&display=swap" as="style">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&subset=latin,latin-ext&display=swap" rel="stylesheet">
 ```
 
 ### 5.3 间距系统
@@ -257,9 +266,11 @@ summary: "文章摘要，用于列表展示"
 
 添加新工具只需三步：
 
-1. **注册工具：** 在 `src/data/tools.json` 添加条目
+1. **注册工具：** 在 `src/data/tools.json` 添加条目（必需，安全白名单）
 2. **创建组件：** 在 `src/components/tools/[tool-name]/` 创建 Vue 组件
 3. **自动发现：** 工具自动出现在工具列表页
+
+**安全说明：** 工具路由 `/tools/:toolName` 只接受 `tools.json` 中已注册的工具名称。动态导入组件前会先验证 toolName 是否在白名单中，防止路径遍历攻击。
 
 ### 7.2 组件化架构
 
@@ -337,21 +348,36 @@ summary: "文章摘要，用于列表展示"
 
 ### 10.1 单元测试
 
-- 数据解析函数
-- 工具函数（日期、URL、验证）
-- 工具组件核心逻辑
+**测试文件位置：** `tests/unit/`
+
+**测试覆盖：**
+- `utils/markdown.test.js` — Frontmatter 解析、Markdown 渲染、代码高亮
+- `utils/date.test.js` — 日期格式转换（ISO → 显示格式）
+- `utils/validation.test.js` — URL 验证、输入验证
+- `router/whitelist.test.js` — **CRITICAL** 工具白名单验证逻辑，防止路径遍历攻击
 
 ### 10.2 组件测试
 
-- 主要页面组件渲染
-- 交互行为（点击、输入、导航）
-- 深色模式切换
+**测试文件位置：** `tests/components/`
+
+**测试覆盖：**
+- `Home.test.js` — 首页三个入口卡片渲染、点击跳转
+- `BlogList.test.js` — 博客列表渲染、时间排序、标签筛选
+- `BlogDetail.test.js` — 博客详情渲染、Markdown 内容、返回导航
+- `Bookmarks.test.js` — 收藏列表渲染、分类筛选、搜索功能
+- `Tools.test.js` — 工具列表渲染、工具卡片点击
+- `ThemeToggle.test.js` — 深色模式切换、主题持久化（LocalStorage）
 
 ### 10.3 E2E 测试
 
-- 用户核心流程
-- 跨浏览器兼容性
-- 移动端响应式
+**测试文件位置：** `tests/e2e/`
+
+**测试覆盖：**
+- `navigation.spec.js` — 完整导航流程（首页 → 各子页面 → 返回）
+- `blog-flow.spec.js` — 阅读博客完整流程（列表 → 详情 → 返回）
+- `tools-flow.spec.js` — 工具动态加载流程（列表 → 工具页 → 功能验证）
+- `security.spec.js` — **CRITICAL** 工具路由安全测试，验证路径遍历攻击被阻止
+- `responsive.spec.js` — 移动端/平板/桌面响应式布局验证
 
 ---
 
@@ -389,13 +415,13 @@ summary: "文章摘要，用于列表展示"
 
 ### 12.3 工具开发流程
 
-1. 创建功能分支
+1. 从 `develop` 分支创建 `feature/tool-name` 功能分支
 2. 开发工具组件
 3. 更新 tools.json
 4. 本地测试
-5. 提交 PR
+5. 提交 PR 到 `develop` 分支
 6. 代码审查
-7. 合并到 main
+7. 合并到 `develop`，定期从 `develop` 合并到 `main`
 
 ---
 
