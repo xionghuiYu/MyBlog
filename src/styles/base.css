@@ -1,0 +1,32 @@
+@import './variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+
+  body {
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-button font-medium transition-all duration-200 ease-out-cubic;
+  }
+
+  .card {
+    @apply bg-white dark:bg-zinc-900 rounded-card border border-border dark:border-zinc-800;
+  }
+}
