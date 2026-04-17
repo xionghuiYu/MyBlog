@@ -5,11 +5,16 @@ const STORAGE_KEY = 'blog-theme'
 const isDark = ref(false)
 
 const initTheme = () => {
-  const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved) {
-    isDark.value = saved === 'dark'
-  } else {
-    isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      isDark.value = saved === 'dark'
+    } else {
+      isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+  } catch (error) {
+    console.error('Failed to initialize theme:', error)
+    isDark.value = false
   }
   applyTheme()
 }
@@ -24,13 +29,16 @@ const applyTheme = () => {
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
-  localStorage.setItem(STORAGE_KEY, isDark.value ? 'dark' : 'light')
-  applyTheme()
+  // watch 会自动处理 localStorage 和应用主题
 }
 
 watch(isDark, (newValue) => {
-  localStorage.setItem(STORAGE_KEY, newValue ? 'dark' : 'light')
-  applyTheme()
+  try {
+    localStorage.setItem(STORAGE_KEY, newValue ? 'dark' : 'light')
+    applyTheme()
+  } catch (error) {
+    console.error('Failed to persist theme:', error)
+  }
 })
 
 initTheme()
