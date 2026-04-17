@@ -23,7 +23,8 @@
 
 @layer components {
   .btn {
-    @apply px-4 py-2 rounded-button font-medium transition-all duration-200 ease-out-cubic;
+    @apply px-4 py-2 rounded-button font-medium transition-all duration-200;
+    transition-timing-function: var(--ease-out-cubic);
   }
 
   .card {
