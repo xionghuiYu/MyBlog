@@ -27,7 +27,7 @@
 **Files:**
 - Create: `src/data/bookmarks.json`
 
-- [ ] **Step 1: 创建 bookmarks.json**
+- [x] **Step 1: 创建 bookmarks.json**
 
 ```json
 {
@@ -121,7 +121,7 @@
 }
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add src/data/bookmarks.json
@@ -135,7 +135,7 @@ git commit -m "chore: 创建书签数据配置"
 **Files:**
 - Create: `src/components/bookmarks/BookmarkCard.vue`
 
-- [ ] **Step 1: 创建 BookmarkCard.vue**
+- [x] **Step 1: 创建 BookmarkCard.vue**
 
 ```vue
 <template>
@@ -190,7 +190,7 @@ const props = defineProps({
 </style>
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add src/components/bookmarks/BookmarkCard.vue
@@ -204,7 +204,7 @@ git commit -m "feat: 创建 BookmarkCard 组件"
 **Files:**
 - Create: `src/components/bookmarks/CategoryFilter.vue`
 
-- [ ] **Step 1: 创建 CategoryFilter.vue**
+- [x] **Step 1: 创建 CategoryFilter.vue**
 
 ```vue
 <template>
@@ -239,7 +239,7 @@ defineEmits(['filter'])
 </script>
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add src/components/bookmarks/CategoryFilter.vue
@@ -253,7 +253,7 @@ git commit -m "feat: 创建 CategoryFilter 组件"
 **Files:**
 - Create: `src/components/bookmarks/BookmarkList.vue`
 
-- [ ] **Step 1: 创建 BookmarkList.vue**
+- [x] **Step 1: 创建 BookmarkList.vue**
 
 ```vue
 <template>
@@ -336,7 +336,7 @@ const filteredBookmarks = computed(() => {
 </script>
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add src/components/bookmarks/BookmarkList.vue
@@ -350,7 +350,7 @@ git commit -m "feat: 创建 BookmarkList 组件"
 **Files:**
 - Create: `src/pages/Bookmarks.vue`
 
-- [ ] **Step 1: 创建 Bookmarks.vue**
+- [x] **Step 1: 创建 Bookmarks.vue**
 
 ```vue
 <template>
@@ -366,7 +366,7 @@ import BookmarkList from '../components/bookmarks/BookmarkList.vue'
 </script>
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add src/pages/Bookmarks.vue
@@ -380,7 +380,7 @@ git commit -m "feat: 创建收藏页面"
 **Files:**
 - Modify: `src/router/index.js`
 
-- [ ] **Step 1: 修改 router/index.js 添加收藏路由**
+- [x] **Step 1: 修改 router/index.js 添加收藏路由**
 
 ```javascript
 import { createRouter, createWebHistory } from 'vue-router'
@@ -432,7 +432,7 @@ const router = createRouter({
 export default router
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add src/router/index.js
@@ -446,22 +446,22 @@ git commit -m "chore: 添加收藏路由"
 **Files:**
 - None
 
-- [ ] **Step 1: 启动开发服务器**
+- [x] **Step 1: 启动开发服务器**
 
 Run: `npm run dev`
 Expected: 服务器在 http://localhost:3000 启动
 
-- [ ] **Step 2: 验证功能**
+- [x] **Step 2: 验证功能**
 
-- [ ] 访问 /bookmarks 显示所有收藏
-- [ ] 分类筛选按钮正常工作
-- [ ] 搜索功能正常工作
-- [ ] 点击书签卡片在新标签页打开链接
-- [ ] 悬停效果正常
-- [ ] 响应式布局正常
-- [ ] 显示收藏数量
+- [x] 访问 /bookmarks 显示所有收藏
+- [x] 分类筛选按钮正常工作
+- [x] 搜索功能正常工作
+- [x] 点击书签卡片在新标签页打开链接
+- [x] 悬停效果正常
+- [x] 响应式布局正常
+- [x] 显示收藏数量
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add -A
