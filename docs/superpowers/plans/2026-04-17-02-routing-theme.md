@@ -75,7 +75,7 @@ git commit -m "chore: 添加 Vue Router 和 Lucide Icons 依赖"
 **Files:**
 - Create: `src/router/index.js`
 
-- [ ] **Step 1: 创建 router/index.js**
+- [x] **Step 1: 创建 router/index.js**
 
 ```javascript
 import { createRouter, createWebHistory } from 'vue-router'
@@ -150,7 +150,7 @@ git commit -m "chore: 在 Vue 应用中启用 Router"
 **Files:**
 - Create: `src/pages/Home.vue`
 
-- [ ] **Step 1: 创建 Home.vue**
+- [x] **Step 1: 创建 Home.vue**
 
 ```vue
 <template>
@@ -222,7 +222,7 @@ git commit -m "feat: 创建首页"
 **Files:**
 - Create: `src/pages/NotFound.vue`
 
-- [ ] **Step 1: 创建 NotFound.vue**
+- [x] **Step 1: 创建 NotFound.vue**
 
 ```vue
 <template>
@@ -258,7 +258,7 @@ git commit -m "feat: 创建 404 页面"
 **Files:**
 - Create: `src/components/common/ThemeToggle.vue`
 
-- [ ] **Step 1: 创建 ThemeToggle.vue**
+- [x] **Step 1: 创建 ThemeToggle.vue**
 
 ```vue
 <template>
@@ -294,7 +294,7 @@ git commit -m "feat: 创建 ThemeToggle 组件"
 **Files:**
 - Create: `src/components/common/NavMenu.vue`
 
-- [ ] **Step 1: 创建 NavMenu.vue**
+- [x] **Step 1: 创建 NavMenu.vue**
 
 ```vue
 <template>
@@ -335,7 +335,7 @@ git commit -m "feat: 创建 NavMenu 组件"
 **Files:**
 - Create: `src/components/common/Header.vue`
 
-- [ ] **Step 1: 创建 Header.vue**
+- [x] **Step 1: 创建 Header.vue**
 
 ```vue
 <template>
@@ -377,7 +377,7 @@ git commit -m "feat: 创建 Header 组件"
 **Files:**
 - Create: `src/components/common/Footer.vue`
 
-- [ ] **Step 1: 创建 Footer.vue**
+- [x] **Step 1: 创建 Footer.vue**
 
 ```vue
 <template>
@@ -432,7 +432,7 @@ git commit -m "feat: 创建 Footer 组件"
 **Files:**
 - Modify: `src/App.vue`
 
-- [ ] **Step 1: 修改 App.vue**
+- [x] **Step 1: 修改 App.vue**
 
 ```vue
 <template>
@@ -492,14 +492,14 @@ git commit -m "test: 验证路由和导航功能"
 
 ## 验收标准
 
-- [ ] Vue Router 配置正确
-- [ ] 首页三个入口卡片正常显示
-- [ ] Header 显示 Logo、导航菜单、主题切换
-- [ ] 导航菜单链接正确
-- [ ] 主题切换按钮正常工作并持久化
-- [ ] Footer 正确显示
-- [ ] 404 页面正常显示和导航
-- [ ] 响应式布局正常（移动端隐藏导航菜单）
+- [x] Vue Router 配置正确
+- [x] 首页三个入口卡片正常显示
+- [x] Header 显示 Logo、导航菜单、主题切换
+- [x] 导航菜单链接正确
+- [x] 主题切换按钮正常工作并持久化
+- [x] Footer 正确显示
+- [x] 404 页面正常显示和导航
+- [x] 响应式布局正常（移动端隐藏导航菜单）
 
 ---
 

@@ -1,19 +1,30 @@
+import { marked } from 'marked'
+import hljs from 'highlight.js'
+
+// 配置 marked
+marked.setOptions({
+  highlight: function(code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(code, { language: lang }).value
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    return hljs.highlightAuto(code).value
+  },
+  langPrefix: 'hljs language-',
+  breaks: true,
+  gfm: true
+})
+
 /**
- * 简化的 Markdown 解析器
+ * 渲染 Markdown 为 HTML
+ * @param {string} markdown - Markdown 内容
+ * @returns {string} HTML
  */
 export function renderMarkdown(markdown) {
-  return markdown
-    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-    .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
-    .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-    .replace(/\*(.*)\*/gim, '<em>$1</em>')
-    .replace(/`(.*)`/gim, '<code>$1</code>')
-    .replace(/\n\n/gim, '</p><p>')
-    .replace(/\n/gim, '<br>')
-    .replace(/^(.*)$/gim, '<p>$1</p>')
-    .replace(/<p><\/p>/gim, '')
+  return marked.parse(markdown)
 }
 
 /**
