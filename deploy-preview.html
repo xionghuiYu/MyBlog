@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人博客 - 预览</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/highlight.js@11.9.0/lib/index.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/highlight.js@11.9.0/styles/github.min.css">
+
+    <style>
+        :root {
+            --color-primary: #18181B;
+            --color-secondary: #3F3F46;
+            --color-accent: #2563EB;
+            --color-background: #FAFAFA;
+            --color-foreground: #09090B;
+            --color-muted: #E8ECF0;
+            --color-border: #E4E4E7;
+            --font-display: 'Archivo', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+        }
+
+        .dark {
+            --color-background: #09090B;
+            --color-foreground: #FAFAFA;
+            --color-muted: #27272A;
+            --color-border: #27272A;
+            --color-accent: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-foreground);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--color-background);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(250, 250, 250, 0.8);
+        }
+
+        .dark header {
+            background: rgba(9, 9, 11, 0.8);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--color-primary);
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            background: var(--color-accent);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--color-secondary);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--color-accent);
+        }
+
+        .theme-toggle {
+            background: var(--color-muted);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-secondary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--color-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-primary);
+        }
+
+        .card p {
+            color: var(--color-secondary);
+        }
+
+        .blog-list {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--color-secondary);
+        }
+
+        .blog-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: var(--color-accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+        }
+
+        .blog-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .blog-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .blog-content h2 {
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .blog-content h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .blog-content p {
+            margin-bottom: 1rem;
+        }
+
+        .blog-content code {
+            background: var(--color-muted);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+
+        .blog-content pre {
+            background: var(--color-muted);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .blog-content blockquote {
+            border-left: 4px solid var(--color-accent);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: var(--color-secondary);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-accent);
+            text-decoration: none;
+            margin-bottom: 2rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--color-secondary);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                gap: 1rem;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Highlight.js styles */
+        .hljs {
+            background: var(--color-muted) !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue;
+        const { createRouter, createWebHistory } = VueRouter;
+
+        // Theme management
+        const isDark = ref(false);
+
+        const toggleTheme = () => {
+            isDark.value = !isDark.value;
+            if (isDark.value) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        };
+
+        // Initialize theme
+        if (localStorage.getItem('theme') === 'dark' ||
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            isDark.value = true;
+            document.documentElement.classList.add('dark');
+        }
+
+        // Mock blog data
+        const blogPosts = [
+            {
+                slug: 'hello-world',
+                title: '欢迎来到我的博客',
+                date: '2026-04-14',
+                tags: ['生活', '开篇'],
+                summary: '这是我的第一篇博客文章，欢迎来到我的个人博客！',
+                content: `
+# 欢迎来到我的博客
+
+这是我的第一篇博客文章，很高兴见到你！
+
+## 关于这个博客
+
+这是一个简洁的个人博客，我会在这里分享：
+
+- 生活日常
+- 技术文章
+- 有趣的发现
+
+## 代码示例
+
+这是一个 JavaScript 代码块示例：
+
+\`\`\`javascript
+function greet(name) {
+  return \`Hello, \${name}!\`
+}
+
+console.log(greet('World'))
+\`\`\`
+
+## 联系我
+
+如果你想联系我，可以通过邮箱或者社交媒体。
+
+感谢你的访问！`
+            },
+            {
+                slug: 'vue3-composition-api',
+                title: 'Vue 3 Composition API 入门指南',
+                date: '2026-04-12',
+                tags: ['Vue', '前端', '教程'],
+                summary: '详细介绍 Vue 3 Composition API 的核心概念和使用方法。',
+                content: `
+# Vue 3 Composition API 入门指南
+
+Composition API 是 Vue 3 的一个重要特性，它提供了一种更灵活的方式来组织组件逻辑。
+
+## setup() 函数
+
+\`\`\`javascript
+import { ref, computed } from 'vue'
+
+export default {
+  setup() {
+    const count = ref(0)
+    const double = computed(() => count.value * 2)
+
+    function increment() {
+      count.value++
+    }
+
+    return {
+      count,
+      double,
+      increment
+    }
+  }
+}
+\`\`\`
+
+## 响应式系统
+
+Vue 3 的响应式系统基于 Proxy，提供了更好的性能和更少的限制。
+
+## 总结
+
+Composition API 让代码更易于复用和测试，建议在新项目中使用。`
+            },
+            {
+                slug: 'tailwind-css-guide',
+                title: 'Tailwind CSS 快速入门',
+                date: '2026-04-10',
+                tags: ['CSS', '前端', '工具'],
+                summary: '学习 Tailwind CSS 的基本用法和最佳实践。',
+                content: `
+# Tailwind CSS 快速入门
+
+Tailwind CSS 是一个实用的 CSS 框架，让你可以快速构建现代网站。
+
+## 安装
+
+\`\`\`bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+\`\`\`
+
+## 基本用法
+
+\`\`\`html
+<div class="bg-blue-500 text-white p-4 rounded-lg">
+  Hello Tailwind!
+</div>
+\`\`\`
+
+## 响应式设计
+
+Tailwind 提供了强大的响应式设计支持。
+
+## 总结
+
+Tailwind CSS 让你不必离开 HTML 就能构建完全定制的网站设计。`
+            }
+        ];
+
+        // Markdown renderer
+        function renderMarkdown(content) {
+            // Simple markdown to HTML conversion for demo
+            return content
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                .replace(/\`(.*)\`/gim, '<code>$1</code>')
+                .replace(/\n\n/gim, '</p><p>')
+                .replace(/^(.*)$/gim, '<p>$1</p>')
+                .replace(/<p>\s*<\/p>/gim, '');
+        }
+
+        // Components
+        const Header = {
+            template: `
+                <header>
+                    <div class="container">
+                        <div class="header-content">
+                            <router-link to="/" class="logo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                                个人博客
+                            </router-link>
+                            <nav class="nav">
+                                <router-link to="/" :class="{ active: $route.path === '/' }">首页</router-link>
+                                <router-link to="/blog" :class="{ active: $route.path === '/blog' }">博客</router-link>
+                                <router-link to="/bookmarks" :class="{ active: $route.path === '/bookmarks' }">收藏</router-link>
+                                <router-link to="/tools" :class="{ active: $route.path === '/tools' }">工具</router-link>
+                            </nav>
+                            <button @click="toggleTheme" class="theme-toggle">
+                                <svg v-if="isDark" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+            `,
+            setup() {
+                return { isDark, toggleTheme };
+            }
+        };
+
+        const Home = {
+            template: `
+                <div>
+                    <section class="hero">
+                        <div class="container">
+                            <h1>欢迎来到我的博客</h1>
+                            <p>分享生活、记录点滴、收藏有用资源</p>
+                        </div>
+                    </section>
+                    <div class="container">
+                        <div class="cards">
+                            <div class="card" @click="$router.push('/blog')">
+                                <div class="card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                    </svg>
+                                </div>
+                                <h2>博客</h2>
+                                <p>阅读我的文章和随笔</p>
+                            </div>
+                            <div class="card" @click="$router.push('/bookmarks')">
+                                <div class="card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                    </svg>
+                                </div>
+                                <h2>收藏</h2>
+                                <p>有用的网站和资源</p>
+                            </div>
+                            <div class="card" @click="$router.push('/tools')">
+                                <div class="card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <h2>工具</h2>
+                                <p>提高效率的小工具</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+
+        const BlogList = {
+            template: `
+                <div class="container">
+                    <div class="blog-list">
+                        <div v-for="post in blogPosts" :key="post.slug" class="blog-card" @click="$router.push('/blog/' + post.slug)">
+                            <div class="blog-tags">
+                                <span v-for="tag in post.tags" :key="tag" class="tag">{{ tag }}</span>
+                            </div>
+                            <h2>{{ post.title }}</h2>
+                            <p>{{ post.summary }}</p>
+                            <div class="blog-meta">
+                                <span>{{ post.date }}</span>
+                                <span>阅读更多 →</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            setup() {
+                return { blogPosts };
+            }
+        };
+
+        const BlogDetail = {
+            template: `
+                <div class="blog-content">
+                    <router-link to="/blog" class="back-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        返回列表
+                    </router-link>
+                    <div v-if="loading" class="loading">加载中...</div>
+                    <article v-else-if="post">
+                        <div class="blog-tags">
+                            <span v-for="tag in post.tags" :key="tag" class="tag">{{ tag }}</span>
+                        </div>
+                        <h1>{{ post.title }}</h1>
+                        <p class="blog-meta">{{ post.date }}</p>
+                        <div v-html="renderMarkdown(post.content)"></div>
+                    </article>
+                    <div v-else class="loading">文章未找到</div>
+                </div>
+            `,
+            setup() {
+                const route = VueRouter.useRoute();
+                const post = ref(null);
+                const loading = ref(true);
+
+                const loadPost = async () => {
+                    loading.value = true;
+                    const slug = route.params.slug;
+                    post.value = blogPosts.find(p => p.slug === slug);
+                    loading.value = false;
+                };
+
+                onMounted(() => {
+                    loadPost();
+                });
+
+                VueRouter.watch(() => route.params.slug, () => {
+                    loadPost();
+                });
+
+                return { post, loading, renderMarkdown };
+            }
+        };
+
+        // Router
+        const routes = [
+            { path: '/', component: Home },
+            { path: '/blog', component: BlogList },
+            { path: '/blog/:slug', component: BlogDetail },
+            { path: '/:pathMatch(.*)*', redirect: '/' }
+        ];
+
+        const router = createRouter({
+            history: createWebHistory(),
+            routes
+        });
+
+        // App
+        const app = createApp({
+            template: `
+                <div :class="{ dark: isDark }">
+                    <Header />
+                    <router-view></router-view>
+                </div>
+            `,
+            setup() {
+                return { isDark };
+            }
+        });
+
+        app.use(router);
+        app.mount('#app');
+    </script>
+</body>
+</html>

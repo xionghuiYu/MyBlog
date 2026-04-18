@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>我的博客</title>
+    <description>分享生活、记录点滴、收藏有用资源</description>
+    <link>http://localhost:5177</link>
+    <pubDate>Thu, 18 Apr 2026 14:00:00 GMT</pubDate>
+    <lastBuildDate>Thu, 18 Apr 2026 14:00:00 GMT</lastBuildDate>
+    <ttl>60</ttl>
+    <language>zh-CN</language>
+
+    <item>
+      <title>欢迎来到我的博客</title>
+      <description>这是我的第一篇博客文章，欢迎来到我的个人博客！</description>
+      <link>http://localhost:5177/blog/hello-world</link>
+      <guid>http://localhost:5177/blog/hello-world</guid>
+      <pubDate>Wed, 15 Apr 2026 00:00:00 GMT</pubDate>
+      <category>生活</category>
+      <category>开篇</category>
+      <dc:creator>博主</dc:creator>
+    </item>
+
+    <item>
+      <title>Vue 3 Composition API 入门指南</title>
+      <description>详细介绍 Vue 3 Composition API 的核心概念和使用方法。</description>
+      <link>http://localhost:5177/blog/vue3-composition-api</link>
+      <guid>http://localhost:5177/blog/vue3-composition-api</guid>
+      <pubDate>Mon, 13 Apr 2026 00:00:00 GMT</pubDate>
+      <category>Vue</category>
+      <category>前端</category>
+      <category>教程</category>
+      <dc:creator>博主</dc:creator>
+    </item>
+
+    <item>
+      <title>Tailwind CSS 快速入门</title>
+      <description>介绍如何使用 Tailwind CSS 构建现代化的用户界面。</description>
+      <link>http://localhost:5177/blog/tailwind-css-guide</link>
+      <guid>http://localhost:5177/blog/tailwind-css-guide</guid>
+      <pubDate>Fri, 11 Apr 2026 00:00:00 GMT</pubDate>
+      <category>CSS</category>
+      <category>前端</category>
+      <category>工具</category>
+      <dc:creator>博主</dc:creator>
+    </item>
+  </channel>
+</rss>

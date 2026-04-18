@@ -7,11 +7,10 @@
       </div>
 
       <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-        <input
+        <SearchBox
           v-model="searchQuery"
-          type="search"
-          placeholder="搜索文章..."
-          class="px-4 py-2 rounded-input border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent/50"
+          @search="handleSearchResults"
+          class="w-full sm:w-64"
         />
 
         <select
@@ -47,8 +46,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { fetchPostsIndex, searchPosts, filterPostsByTag, getAllTags } from '../../utils/fetch.js'
+import { fetchPostsIndex, filterPostsByTag, getAllTags } from '../../utils/fetch.js'
 import BlogCard from './BlogCard.vue'
+import SearchBox from './SearchBox.vue'
 
 const posts = ref([])
 const loading = ref(true)
@@ -57,12 +57,9 @@ const selectedTag = ref('')
 
 const allTags = computed(() => getAllTags(posts.value))
 
+const searchResults = ref([])
 const filteredPosts = computed(() => {
-  let result = posts.value
-
-  if (searchQuery.value) {
-    result = searchPosts(result, searchQuery.value)
-  }
+  let result = searchResults.value.length > 0 ? searchResults.value : posts.value
 
   if (selectedTag.value) {
     result = filterPostsByTag(result, selectedTag.value)
@@ -70,6 +67,10 @@ const filteredPosts = computed(() => {
 
   return result
 })
+
+const handleSearchResults = (results) => {
+  searchResults.value = results
+}
 
 onMounted(async () => {
   try {

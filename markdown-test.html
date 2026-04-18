@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown渲染测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.5em; }
+        h3 { font-size: 1.2em; }
+        p {
+            margin-bottom: 15px;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        blockquote {
+            border-left: 4px solid #007bff;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #666;
+            font-style: italic;
+        }
+        .tag {
+            display: inline-block;
+            background: #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .post-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">加载中...</h1>
+        <div class="post-meta">
+            <span id="date"></span> |
+            <span id="tags"></span>
+        </div>
+        <div id="content"></div>
+    </div>
+
+    <script>
+        // Markdown解析函数
+        function parseMarkdown(markdown) {
+            return markdown
+                // 代码块
+                .replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+                    return `<pre><code class="language-${lang || ''}">${escapeHtml(code.trim())}</code></pre>`;
+                })
+                // 行内代码
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                // 加粗
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                // 斜体
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                // 标题
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                // 引用
+                .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+                // 无序列表
+                .replace(/^\- (.*$)/gim, '<li>$1</li>')
+                // 有序列表
+                .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+                // 段落
+                .replace(/\n\n/gim, '</p><p>')
+                .replace(/\n/gim, '<br>')
+                .replace(/^(.*)$/gim, '<p>$1</p>')
+                // 清理空段落
+                .replace(/<p><\/p>/gim, '')
+                // 清理段落标签内的br
+                .replace(/<p>(.*?)<\/p>/g, (match, content) => {
+                    return `<p>${content.replace(/<br>$/, '')}</p>`;
+                });
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // 解析Frontmatter
+        function parseFrontmatter(content) {
+            const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+            const match = content.match(frontmatterRegex);
+
+            if (!match) {
+                return { metadata: {}, content };
+            }
+
+            const frontmatter = match[1];
+            const body = match[2];
+            const metadata = {};
+
+            frontmatter.split('\n').forEach(line => {
+                const [key, ...valueParts] = line.split(':');
+                if (key && valueParts.length > 0) {
+                    let value = valueParts.join(':').trim();
+
+                    if ((value.startsWith('"') && value.endsWith('"')) ||
+                        (value.startsWith("'") && value.endsWith("'"))) {
+                        value = value.slice(1, -1);
+                    }
+
+                    if (value.startsWith('[') && value.endsWith(']')) {
+                        value = value.slice(1, -1).split(',').map(v => v.trim().replace(/['"]/g, ''));
+                    }
+
+                    metadata[key.trim()] = value;
+                }
+            });
+
+            return { metadata, content: body };
+        }
+
+        // 加载并渲染文章
+        async function loadAndRenderPost(slug) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8080/posts/${slug}.md`);
+                const content = await response.text();
+
+                const { metadata, content: body } = parseFrontmatter(content);
+                const html = parseMarkdown(body);
+
+                document.getElementById('title').textContent = metadata.title || '无标题';
+                document.getElementById('date').textContent = metadata.date || '未知日期';
+                document.getElementById('tags').innerHTML =
+                    (metadata.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('');
+                document.getElementById('content').innerHTML = html;
+            } catch (error) {
+                console.error('加载文章失败:', error);
+                document.getElementById('content').innerHTML = '<p>加载失败，请检查文章是否存在</p>';
+            }
+        }
+
+        // URL参数获取
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 初始化
+        const slug = getUrlParameter('slug') || 'hello-world';
+        loadAndRenderPost(slug);
+    </script>
+</body>
+</html>
