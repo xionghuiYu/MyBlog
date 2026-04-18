@@ -1,0 +1,89 @@
+{
+  "categories": ["开发", "效率", "设计", "学习", "工具"],
+  "bookmarks": [
+    {
+      "id": "mdn",
+      "title": "MDN Web Docs",
+      "url": "https://developer.mozilla.org",
+      "category": "开发",
+      "description": "Web 开发权威文档，涵盖 HTML、CSS、JavaScript 等"
+    },
+    {
+      "id": "github",
+      "title": "GitHub",
+      "url": "https://github.com",
+      "category": "开发",
+      "description": "全球最大的代码托管平台"
+    },
+    {
+      "id": "stackoverflow",
+      "title": "Stack Overflow",
+      "url": "https://stackoverflow.com",
+      "category": "开发",
+      "description": "开发者问答社区"
+    },
+    {
+      "id": "notion",
+      "title": "Notion",
+      "url": "https://notion.so",
+      "category": "效率",
+      "description": "一体化工作空间，笔记、任务、文档管理"
+    },
+    {
+      "id": "figma",
+      "title": "Figma",
+      "url": "https://figma.com",
+      "category": "设计",
+      "description": "在线协作设计工具"
+    },
+    {
+      "id": "dribbble",
+      "title": "Dribbble",
+      "url": "https://dribbble.com",
+      "category": "设计",
+      "description": "设计师灵感社区"
+    },
+    {
+      "id": "coursera",
+      "title": "Coursera",
+      "url": "https://coursera.org",
+      "category": "学习",
+      "description": "在线课程平台，与顶尖大学合作"
+    },
+    {
+      "id": "khan-academy",
+      "title": "Khan Academy",
+      "url": "https://khanacademy.org",
+      "category": "学习",
+      "description": "免费在线教育平台"
+    },
+    {
+      "id": "chatgpt",
+      "title": "ChatGPT",
+      "url": "https://chat.openai.com",
+      "category": "工具",
+      "description": "OpenAI 的 AI 聊天助手"
+    },
+    {
+      "id": "canva",
+      "title": "Canva",
+      "url": "https://canva.com",
+      "category": "设计",
+      "description": "在线设计工具，简单易用"
+    },
+    {
+      "id": "vercel",
+      "title": "Vercel",
+      "url": "https://vercel.com",
+      "category": "开发",
+      "description": "前端应用部署平台"
+    },
+    {
+      "id": "youtube",
+      "title": "YouTube",
+      "url": "https://youtube.com",
+      "category": "学习",
+      "description": "视频分享平台，丰富的学习资源"
+    }
+  ]
+}
