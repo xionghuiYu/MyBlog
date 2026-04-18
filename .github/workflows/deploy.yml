@@ -39,12 +39,12 @@ jobs:
         run: npm run build
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v3
         with:
-          static_html: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
 
-      - name: Upload to GitHub Pages
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
