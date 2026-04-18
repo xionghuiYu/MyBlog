@@ -68,4 +68,19 @@ const router = createRouter({
   }
 })
 
+// GitHub Pages 部署时的路由处理
+if (import.meta.env.MODE === 'production') {
+  // 修复 GitHub Pages 路由问题
+  if (typeof window !== 'undefined') {
+    const originalPush = router.push
+    router.push = function (to) {
+      if (typeof to === 'string') {
+        // 确保路径正确处理
+        to = to.replace(/^\//, '/')
+      }
+      return originalPush.call(this, to)
+    }
+  }
+}
+
 export default router

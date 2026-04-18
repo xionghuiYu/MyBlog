@@ -12,7 +12,8 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "deploy:gh": "./deploy-gh-pages.sh"
   },
   "dependencies": {
     "@giscus/vue": "^3.1.1",

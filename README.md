@@ -116,16 +116,28 @@ vercel
 
 #### GitHub Pages 部署
 
-1. 构建
+#### 方法一：手动部署（推荐用于测试）
+
 ```bash
+# 安装依赖
+npm install
+
+# 构建项目
 npm run build
+
+# 运行部署脚本
+npm run deploy:gh
 ```
 
-2. 部署到 gh-pages
-```bash
-npm install -g gh-pages
-gh-pages -d dist
-```
+#### 方法二：自动部署（CI/CD）
+
+推送代码到 main 分支后，会自动触发 GitHub Actions 部署到 GitHub Pages。
+
+#### 方法三：GitHub Pages 设置
+
+1. 在 GitHub 仓库的 Settings > Pages 中
+2. Source 选择 "GitHub Actions"
+3. 确保启用 Actions
 
 ### 📦 预览
 
