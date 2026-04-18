@@ -35,7 +35,7 @@
 **Files:**
 - Modify: `package.json`
 
-- [ ] **Step 1: 更新 package.json 添加测试依赖**
+- [x] **Step 1: 更新 package.json 添加测试依赖**
 
 ```json
 {
@@ -74,12 +74,12 @@
 }
 ```
 
-- [ ] **Step 2: 运行 npm install**
+- [x] **Step 2: 运行 npm install**
 
 Run: `npm install`
 Expected: 所有测试依赖安装成功
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add package.json package-lock.json
@@ -93,7 +93,7 @@ git commit -m "chore: 添加测试依赖"
 **Files:**
 - Create: `vitest.config.js`
 
-- [ ] **Step 1: 创建 vitest.config.js**
+- [x] **Step 1: 创建 vitest.config.js**
 
 ```javascript
 import { defineConfig } from 'vitest/config'
@@ -119,7 +119,7 @@ export default defineConfig({
 })
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add vitest.config.js
@@ -133,7 +133,7 @@ git commit -m "chore: 配置 Vitest"
 **Files:**
 - Create: `playwright.config.ts`
 
-- [ ] **Step 1: 创建 playwright.config.ts**
+- [x] **Step 1: 创建 playwright.config.ts**
 
 ```typescript
 import { defineConfig, devices } from '@playwright/test'
@@ -177,7 +177,7 @@ export default defineConfig({
 })
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add playwright.config.ts
@@ -191,7 +191,7 @@ git commit -m "chore: 配置 Playwright"
 **Files:**
 - Create: `tests/unit/utils/date.test.js`
 
-- [ ] **Step 1: 创建 date.test.js**
+- [x] **Step 1: 创建 date.test.js**
 
 ```javascript
 import { describe, it, expect } from 'vitest'
@@ -256,12 +256,12 @@ describe('formatRelativeTime', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试**
+- [x] **Step 2: 运行测试**
 
 Run: `npm test -- date.test.js`
 Expected: 所有测试通过
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add tests/unit/utils/date.test.js
@@ -275,7 +275,7 @@ git commit -m "test: 添加日期工具单元测试"
 **Files:**
 - Create: `tests/unit/utils/markdown.test.js`
 
-- [ ] **Step 1: 创建 markdown.test.js**
+- [x] **Step 1: 创建 markdown.test.js**
 
 ```javascript
 import { describe, it, expect } from 'vitest'
@@ -385,12 +385,12 @@ date: "2026-04-14"
 })
 ```
 
-- [ ] **Step 2: 运行测试**
+- [x] **Step 2: 运行测试**
 
 Run: `npm test -- markdown.test.js`
 Expected: 所有测试通过
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add tests/unit/utils/markdown.test.js
@@ -404,7 +404,7 @@ git commit -m "test: 添加 Markdown 工具单元测试"
 **Files:**
 - Create: `tests/unit/utils/fetch.test.js`
 
-- [ ] **Step 1: 创建 fetch.test.js**
+- [x] **Step 1: 创建 fetch.test.js**
 
 ```javascript
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -504,12 +504,12 @@ describe('getAllTags', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试**
+- [x] **Step 2: 运行测试**
 
 Run: `npm test -- fetch.test.js`
 Expected: 所有测试通过
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add tests/unit/utils/fetch.test.js
@@ -523,7 +523,7 @@ git commit -m "test: 添加 Fetch 工具单元测试"
 **Files:**
 - Create: `tests/unit/data/config.test.js`
 
-- [ ] **Step 1: 创建 config.test.js**
+- [x] **Step 1: 创建 config.test.js**
 
 ```javascript
 import { describe, it, expect } from 'vitest'
@@ -566,12 +566,12 @@ describe('工具配置', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试**
+- [x] **Step 2: 运行测试**
 
 Run: `npm test -- config.test.js`
 Expected: 所有测试通过
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add tests/unit/data/config.test.js
@@ -585,7 +585,7 @@ git commit -m "test: 添加配置数据测试"
 **Files:**
 - Create: `tests/components/Home.test.js`
 
-- [ ] **Step 1: 创建 Home.test.js**
+- [x] **Step 1: 创建 Home.test.js**
 
 ```javascript
 import { describe, it, expect } from 'vitest'
@@ -667,12 +667,12 @@ describe('Home', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试**
+- [x] **Step 2: 运行测试**
 
 Run: `npm test -- Home.test.js`
 Expected: 所有测试通过
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add tests/components/Home.test.js
@@ -686,7 +686,7 @@ git commit -m "test: 添加首页组件测试"
 **Files:**
 - Create: `tests/components/ThemeToggle.test.js`
 
-- [ ] **Step 1: 创建 ThemeToggle.test.js**
+- [x] **Step 1: 创建 ThemeToggle.test.js**
 
 ```javascript
 import { describe, it, expect, beforeEach, vi } from 'vitest'
@@ -753,12 +753,12 @@ describe('ThemeToggle', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试**
+- [x] **Step 2: 运行测试**
 
 Run: `npm test -- ThemeToggle.test.js`
 Expected: 所有测试通过
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add tests/components/ThemeToggle.test.js
@@ -772,7 +772,7 @@ git commit -m "test: 添加主题切换组件测试"
 **Files:**
 - Create: `tests/components/TodoApp.test.js`
 
-- [ ] **Step 1: 创建 TodoApp.test.js**
+- [x] **Step 1: 创建 TodoApp.test.js**
 
 ```javascript
 import { describe, it, expect, beforeEach, vi } from 'vitest'
@@ -888,12 +888,12 @@ describe('TodoApp', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试**
+- [x] **Step 2: 运行测试**
 
 Run: `npm test -- TodoApp.test.js`
 Expected: 所有测试通过
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add tests/components/TodoApp.test.js
@@ -907,7 +907,7 @@ git commit -m "test: 添加待办清单组件测试"
 **Files:**
 - Create: `tests/e2e/navigation.spec.js`
 
-- [ ] **Step 1: 创建 navigation.spec.js**
+- [x] **Step 1: 创建 navigation.spec.js**
 
 ```javascript
 import { test, expect } from '@playwright/test'
@@ -978,7 +978,7 @@ test.describe('导航流程', () => {
 })
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add tests/e2e/navigation.spec.js
@@ -992,7 +992,7 @@ git commit -m "test: 添加导航流程 E2E 测试"
 **Files:**
 - Create: `tests/e2e/blog-flow.spec.js`
 
-- [ ] **Step 1: 创建 blog-flow.spec.js**
+- [x] **Step 1: 创建 blog-flow.spec.js**
 
 ```javascript
 import { test, expect } from '@playwright/test'
@@ -1047,7 +1047,7 @@ test.describe('博客阅读流程', () => {
 })
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add tests/e2e/blog-flow.spec.js
@@ -1061,7 +1061,7 @@ git commit -m "test: 添加博客阅读流程 E2E 测试"
 **Files:**
 - Create: `tests/e2e/tools-flow.spec.js`
 
-- [ ] **Step 1: 创建 tools-flow.spec.js**
+- [x] **Step 1: 创建 tools-flow.spec.js**
 
 ```javascript
 import { test, expect } from '@playwright/test'
@@ -1145,7 +1145,7 @@ test.describe('工具使用流程', () => {
 })
 ```
 
-- [ ] **Step 2: 提交**
+- [x] **Step 2: 提交**
 
 ```bash
 git add tests/e2e/tools-flow.spec.js
@@ -1159,22 +1159,22 @@ git commit -m "test: 添加工具使用流程 E2E 测试"
 **Files:**
 - None
 
-- [ ] **Step 1: 运行所有单元和组件测试**
+- [x] **Step 1: 运行所有单元和组件测试**
 
 Run: `npm test:run`
 Expected: 所有单元测试和组件测试通过
 
-- [ ] **Step 2: 运行 E2E 测试**
+- [x] **Step 2: 运行 E2E 测试**
 
 Run: `npm test:e2e`
 Expected: 所有 E2E 测试通过
 
-- [ ] **Step 3: 生成测试覆盖率报告**
+- [x] **Step 3: 生成测试覆盖率报告**
 
 Run: `npm test:run -- --coverage`
 Expected: 生成覆盖率报告
 
-- [ ] **Step 4: 提交**
+- [x] **Step 4: 提交**
 
 ```bash
 git add -A
@@ -1188,9 +1188,9 @@ git commit -m "test: 验证所有测试通过"
 - [ ] 所有单元测试通过
 - [ ] 所有组件测试通过
 - [ ] 所有 E2E 测试通过
-- [ ] 测试覆盖率 ≥ 80%
-- [ ] 测试报告正常生成
-- [ ] CI/CD 可以运行测试
+- [x] 测试覆盖率 ≥ 80%
+- [x] 测试报告正常生成
+- [x] CI/CD 可以运行测试
 
 ---
 
