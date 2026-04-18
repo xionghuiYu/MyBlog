@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/Home.vue'
 import Blog from '../pages/Blog.vue'
 import BlogDetail from '../pages/BlogDetail.vue'
+import Bookmarks from '../pages/Bookmarks.vue'
 import NotFound from '../pages/NotFound.vue'
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
     path: '/blog/:slug',
     name: 'blog-detail',
     component: BlogDetail
+  },
+  {
+    path: '/bookmarks',
+    name: 'bookmarks',
+    component: Bookmarks
   },
   {
     path: '/:pathMatch(.*)*',
