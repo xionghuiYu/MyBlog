@@ -10,7 +10,9 @@
   "dependencies": {
     "vue": "^3.4.0",
     "vue-router": "^4.2.5",
-    "lucide-vue-next": "^0.309.0"
+    "lucide-vue-next": "^0.309.0",
+    "marked": "^12.0.0",
+    "highlight.js": "^11.9.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
