@@ -1,0 +1,23 @@
+[
+  {
+    "slug": "hello-world",
+    "title": "欢迎来到我的博客",
+    "date": "2026-04-14",
+    "tags": ["生活", "开篇"],
+    "summary": "这是我的第一篇博客文章，欢迎来到我的个人博客！"
+  },
+  {
+    "slug": "vue3-composition-api",
+    "title": "Vue 3 Composition API 入门指南",
+    "date": "2026-04-12",
+    "tags": ["Vue", "前端", "教程"],
+    "summary": "详细介绍 Vue 3 Composition API 的核心概念和使用方法。"
+  },
+  {
+    "slug": "tailwind-css-guide",
+    "title": "Tailwind CSS 快速入门",
+    "date": "2026-04-10",
+    "tags": ["CSS", "前端", "工具"],
+    "summary": "学习 Tailwind CSS 的基本用法和最佳实践。"
+  }
+]

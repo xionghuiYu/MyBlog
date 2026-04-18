@@ -30,4 +30,73 @@
   .card {
     @apply bg-white dark:bg-zinc-900 rounded-card border border-border dark:border-zinc-800;
   }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .prose {
+    @apply max-w-none text-foreground;
+
+    /* Typography */
+    h1 { @apply font-display text-3xl font-bold mt-8 mb-4 text-primary; }
+    h2 { @apply font-display text-2xl font-bold mt-6 mb-3 text-primary; }
+    h3 { @apply font-display text-xl font-semibold mt-4 mb-2 text-primary; }
+
+    /* Paragraphs */
+    p { @apply mb-4 text-secondary leading-relaxed; }
+
+    /* Links */
+    a { @apply text-accent hover:underline; }
+
+    /* Lists */
+    ul, ol { @apply mb-4 pl-6 text-secondary; }
+    li { @apply mb-2; }
+
+    /* Blockquotes */
+    blockquote {
+      @apply border-l-4 border-accent pl-4 italic text-secondary my-4;
+    }
+
+    /* Code */
+    code {
+      @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-accent;
+    }
+
+    pre {
+      @apply bg-muted rounded-lg p-4 overflow-x-auto my-4;
+    }
+
+    pre code {
+      @apply bg-transparent px-0 py-0 text-foreground;
+    }
+
+    /* Tables */
+    table {
+      @apply w-full border-collapse my-4;
+    }
+
+    th, td {
+      @apply border border-border px-4 py-2 text-left;
+    }
+
+    th {
+      @apply font-semibold bg-muted;
+    }
+
+    /* Horizontal Rule */
+    hr {
+      @apply border-border my-8;
+    }
+
+    /* Images */
+    img {
+      @apply rounded-lg my-4 max-w-full h-auto;
+    }
+  }
 }
